@@ -1,321 +1,213 @@
-import { useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import {
-  Mail,
-  Moon,
-  Sun,
-  Code,
-  Terminal,
-  Linkedin,
-  Github,
-} from "lucide-react";
+
+import {  useState } from "react"
+import { motion } from "framer-motion"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Switch } from "@/components/ui/switch"
+import { Briefcase, GraduationCap, Mail, MapPin, Moon, Sun, Code, Terminal, Linkedin, Github } from "lucide-react"
 
 export default function Home() {
-  const [darkMode, setDarkMode] = useState(false);
-  const { scrollY } = useScroll();
-
-  const y = useTransform(scrollY, [0, 500], [0, 100]);
+  const [darkMode, setDarkMode] = useState(false)
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle("dark");
-  };
+    setDarkMode(!darkMode)
+    document.documentElement.classList.toggle("dark")
+  }
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
-
-  const staggerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "backOut" },
-    },
-  };
+  const fadeIn = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: { duration: 0.8 },
+  }
 
   return (
-    <div
-      className={`min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-500 ${
-        darkMode ? "dark" : ""
-      }`}
-    >
-      <motion.div
-        className="fixed inset-0 bg-gradient-to-b from-blue-100/50 to-gray-50/50 dark:from-gray-900/50 dark:to-blue-900/10"
-        style={{ y }}
-      />
+    <div className={`min-h-screen bg-gradient-to-br from-rose-50 to-cyan-50 dark:from-gray-950 dark:to-gray-900 transition-colors duration-500 ${darkMode ? "dark" : ""}`}>
+      {/* Floating Background Shapes */}
+      <div className="fixed inset-0 overflow-hidden">
+        <div className="absolute w-96 h-96 bg-rose-200/30 dark:bg-rose-900/20 rounded-full blur-3xl -top-48 -left-48" />
+        <div className="absolute w-96 h-96 bg-cyan-200/30 dark:bg-cyan-900/20 rounded-full blur-3xl -bottom-48 -right-48" />
+      </div>
 
       <div className="container mx-auto max-w-6xl px-4 py-8 relative">
-        {/* Header */}
-        <motion.header
-          className="flex justify-between items-center mb-20"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="flex items-center space-x-4">
-            <Terminal className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-            <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+        {/* Header Section */}
+        <header className="flex justify-between items-center mb-20">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center space-x-4"
+          >
+            <Terminal className="h-8 w-8 text-cyan-600 dark:text-cyan-400" />
+            <span className="text-xl font-medium bg-gradient-to-r from-cyan-600 to-rose-600 bg-clip-text text-transparent dark:from-cyan-400 dark:to-rose-400">
               johndoe.dev
             </span>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow-sm">
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center space-x-6"
+          >
+            <div className="flex items-center space-x-2 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
               <Sun className="h-5 w-5 text-amber-500" />
               <Switch checked={darkMode} onCheckedChange={toggleDarkMode} />
-              <Moon className="h-5 w-5 text-slate-400" />
+              <Moon className="h-5 w-5 text-slate-500" />
             </div>
-          </div>
-        </motion.header>
+          </motion.div>
+        </header>
 
         {/* Hero Section */}
-        <motion.section
+        <motion.section 
           className="flex flex-col lg:flex-row items-center gap-12 mb-28"
-          initial="hidden"
-          animate="visible"
-          variants={staggerVariants}
+          {...fadeIn}
         >
-          <motion.div className="lg:order-2" variants={itemVariants}>
-            <Avatar className="w-64 h-64 border-4 border-white dark:border-gray-800 shadow-xl">
+          <div className="relative lg:order-2">
+            <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400 to-rose-400 rounded-3xl blur-xl opacity-30" />
+            <Avatar className="w-64 h-64 border-4 border-white/50 dark:border-gray-900/50 backdrop-blur-sm shadow-2xl">
               <AvatarImage src="/placeholder.svg" alt="John Doe" />
-              <AvatarFallback className="bg-gradient-to-r from-blue-600 to-slate-600 text-white text-4xl font-bold">
+              <AvatarFallback className="bg-gradient-to-r from-cyan-400 to-rose-400 text-white text-4xl font-medium">
                 JD
               </AvatarFallback>
             </Avatar>
-          </motion.div>
-
-          <motion.div className="lg:order-1 space-y-6" variants={itemVariants}>
-            <motion.h1
-              className="text-5xl md:text-6xl font-bold leading-tight"
+          </div>
+          
+          <div className="lg:order-1 space-y-6">
+            <motion.h1 
+              className="text-5xl md:text-6xl font-medium leading-tight"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
             >
-              Senior
-              <br />
-              <span className="bg-gradient-to-r from-blue-600 to-slate-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-slate-300">
-                Software Engineer
+              Building Digital<br/>
+              <span className="bg-gradient-to-r from-cyan-600 to-rose-600 bg-clip-text text-transparent dark:from-cyan-400 dark:to-rose-400">
+                Experiences
               </span>
             </motion.h1>
-
-            <motion.div
-              className="flex space-x-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
+            
+            <div className="flex space-x-6">
               <motion.a
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md"
+                whileHover={{ y: -2 }}
+                className="flex items-center space-x-2 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-sm"
               >
-                <Mail className="h-5 w-5" />
-                <span>Contact Me</span>
+                <Mail className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+                <span>Get in touch</span>
               </motion.a>
-
+              
               <div className="flex space-x-4">
-                <motion.a
-                  whileHover={{ y: -2 }}
-                  className="p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md"
-                >
-                  <Linkedin className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                <motion.a whileHover={{ y: -2 }} className="p-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-full shadow-sm">
+                  <Linkedin className="h-6 w-6 text-rose-600 dark:text-rose-400" />
                 </motion.a>
-                <motion.a
-                  whileHover={{ y: -2 }}
-                  className="p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md"
-                >
-                  <Github className="h-6 w-6 text-gray-800 dark:text-gray-200" />
+                <motion.a whileHover={{ y: -2 }} className="p-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-full shadow-sm">
+                  <Github className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
                 </motion.a>
               </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Skills Grid */}
+        <motion.section 
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-28"
+          {...fadeIn}
+        >
+          {['React', 'TypeScript', 'Node.js', 'GraphQL', 'AWS', 'Docker', 'Python', 'MongoDB'].map((skill, i) => (
+            <motion.div 
+              key={i}
+              whileHover={{ scale: 1.05 }}
+              className="p-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-3xl shadow-sm border border-white/30 dark:border-gray-900/30"
+            >
+              <div className="h-12 w-12 bg-cyan-100 dark:bg-cyan-900/30 rounded-2xl flex items-center justify-center mb-4">
+                <Code className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
+              </div>
+              <h3 className="text-xl font-serif">{skill}</h3>
             </motion.div>
-          </motion.div>
+          ))}
         </motion.section>
 
-        {/* Skills Section */}
-        <motion.section
-          className="mb-28"
-          initial="hidden"
-          animate="visible"
-          variants={sectionVariants}
-        >
-          <motion.h2
-            className="text-4xl font-bold mb-12 text-gray-800 dark:text-gray-200"
-            variants={itemVariants}
-          >
-            Technical Expertise
-          </motion.h2>
-
-          <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-4"
-            variants={staggerVariants}
-          >
-            {[
-              "React",
-              "TypeScript",
-              "Node.js",
-              "GraphQL",
-              "AWS",
-              "Docker",
-              "Python",
-              "PostgreSQL",
-            ].map((skill, i) => (
-              <motion.div
-                key={i}
-                variants={itemVariants}
-                whileHover={{ scale: 1.05 }}
-                className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm"
-              >
-                <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-4">
-                  <Code className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                  {skill}
-                </h3>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.section>
-
-        {/* Experience Section */}
-        <motion.section
-          className="mb-28"
-          initial="hidden"
-          animate="visible"
-          variants={sectionVariants}
-        >
-          <motion.h2
-            className="text-4xl font-bold mb-12 text-gray-800 dark:text-gray-200"
-            variants={itemVariants}
-          >
-            Professional Experience
-          </motion.h2>
-
-          <motion.div className="space-y-8" variants={staggerVariants}>
+        {/* Experience Timeline */}
+        <motion.section className="mb-28" {...fadeIn}>
+          <div className="space-y-12">
+            <h2 className="text-4xl font-medium mb-12">Professional Journey</h2>
+            
             {[
               {
-                title: "Lead Software Engineer",
-                company: "TechCorp",
+                title: "Lead Developer @ TechCorp",
                 period: "2020 - Present",
-                description:
-                  "Leading cross-functional teams in developing enterprise-scale applications",
-                tech: ["React", "Node.js", "AWS", "GraphQL"],
+                description: "Leading team in building scalable SaaS solutions",
+                tech: ["React", "Node.js", "AWS"]
               },
               {
-                title: "Senior Full Stack Developer",
-                company: "Digital Solutions",
+                title: "Senior Developer @ WebSolutions",
                 period: "2018 - 2020",
-                description:
-                  "Developed cloud-native applications for Fortune 500 clients",
-                tech: ["Angular", "Python", "Docker", "Kubernetes"],
-              },
+                description: "Developed enterprise-grade web applications",
+                tech: ["Angular", "Python", "Docker"]
+              }
             ].map((exp, i) => (
-              <motion.div
+              <motion.div 
                 key={i}
-                variants={itemVariants}
-                className="relative pl-8"
+                className="group relative pl-8"
+                whileHover={{ x: 10 }}
               >
-                <div className="absolute left-0 top-6 h-3 w-3 bg-blue-600 rounded-full" />
-                <Card className="bg-white dark:bg-gray-800 shadow-sm overflow-hidden">
+                <div className="absolute left-0 top-4 h-4 w-4 bg-cyan-400 rounded-full" />
+                <div className="absolute left-2 top-4 h-full w-1 bg-gradient-to-b from-cyan-400/30 to-rose-400/30" />
+                
+                <Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-white/30 dark:border-gray-900/30 rounded-2xl shadow-sm">
                   <CardContent className="p-6">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
                       <div>
-                        <CardTitle className="text-2xl mb-2">
-                          {exp.title}
-                        </CardTitle>
-                        <p className="text-gray-600 dark:text-gray-400 font-medium">
-                          {exp.company} • {exp.period}
-                        </p>
+                        <CardTitle className="text-xl mb-2">{exp.title}</CardTitle>
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">{exp.period}</p>
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {exp.tech.map((t, j) => (
-                          <Badge
+                          <Badge 
                             key={j}
-                            className="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                            className="bg-cyan-100/50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400"
                           >
                             {t}
                           </Badge>
                         ))}
                       </div>
                     </div>
-                    <p className="mt-4 text-gray-700 dark:text-gray-300">
-                      {exp.description}
-                    </p>
+                    <p className="text-gray-700 dark:text-gray-300">{exp.description}</p>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </motion.section>
 
-        {/* Projects Section */}
-        <motion.section
-          className="mb-28"
-          initial="hidden"
-          animate="visible"
-          variants={sectionVariants}
-        >
-          <motion.h2
-            className="text-4xl font-bold mb-12 text-gray-800 dark:text-gray-200"
-            variants={itemVariants}
-          >
-            Key Projects
-          </motion.h2>
-
-          <motion.div
-            className="grid md:grid-cols-2 gap-8"
-            variants={staggerVariants}
-          >
+        {/* Projects Showcase */}
+        <motion.section className="mb-28" {...fadeIn}>
+          <h2 className="text-4xl font-medium mb-12">Featured Work</h2>
+          
+          <div className="grid md:grid-cols-2 gap-8">
             {[
               {
-                title: "Enterprise SaaS Platform",
-                description: "Scalable B2B solution with real-time analytics",
-                stack: ["React", "Node.js", "PostgreSQL", "AWS"],
+                title: "E-commerce Platform",
+                description: "Scalable online shopping solution",
+                stack: ["React", "Node.js", "MongoDB"]
               },
               {
-                title: "AI-Powered Analytics Suite",
-                description:
-                  "Machine learning-driven business insights platform",
-                stack: ["Python", "TensorFlow", "Kubernetes", "BigQuery"],
-              },
+                title: "AI Analytics Dashboard",
+                description: "Real-time business insights",
+                stack: ["Python", "TensorFlow", "AWS"]
+              }
             ].map((project, i) => (
-              <motion.div
+              <motion.div 
                 key={i}
-                variants={itemVariants}
                 whileHover={{ y: -5 }}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden"
+                className="relative overflow-hidden rounded-2xl shadow-sm"
               >
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold mb-4">{project.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    {project.description}
-                  </p>
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/20 to-rose-400/20" />
+                <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-8 border border-white/30 dark:border-gray-900/30">
+                  <h3 className="text-xl font-medium mb-4">{project.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">{project.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {project.stack.map((tech, j) => (
-                      <Badge
+                      <Badge 
                         key={j}
                         variant="outline"
-                        className="border-blue-200 dark:border-blue-900/30 text-blue-600 dark:text-blue-400"
+                        className="border-cyan-200 dark:border-cyan-900/30 text-cyan-600 dark:text-cyan-400"
                       >
                         {tech}
                       </Badge>
@@ -324,9 +216,9 @@ export default function Home() {
                 </div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </motion.section>
       </div>
     </div>
-  );
+  )
 }
