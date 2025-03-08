@@ -1,5 +1,5 @@
 
-import Home from "./home05";
+import Home from "./home";
 
 
 export { Home };

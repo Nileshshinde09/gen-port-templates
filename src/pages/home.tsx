@@ -1,88 +1,85 @@
+"use client"
 
-import {  useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { Briefcase, GraduationCap, Mail, MapPin, Moon, Sun, Code, Terminal, Linkedin, Github, Lock } from "lucide-react"
+import { Mail, Moon, Sun, Code, Terminal, Linkedin, Github, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { VITE_PORTFOLIO_ACCESS_TOKEN } from "@/constants"
 import { Portfolio } from "@/services"
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false)
-  
-  const [email, setEmail] = useState<string | null>(null);
-    const [avatar, setAvatar] = useState<string | null>(null);
-    const [designation, setDesignation] = useState<string | null>(null);
-    const [location, setLocation] = useState<string | null>(null);
-    const [fullName, setFullName] = useState<string | null>(null);
-    const [bio, setBio] = useState<string | null>(null);
-    const [skills, setSkills] = useState<string[]>([]);
-    const [education, setEducation] = useState<any>([]);
-    const [experience, setExperience] = useState<any>([]);
-    const [projects, setProjects] = useState<any>([]);
-    const [error, setError] = useState<boolean>(false);
-    const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
-    useEffect(() => {
-      (async () => {
-        try {
-          const response = await Portfolio.getPublicPortfolio(
-            "default-portfolio-05",
-            VITE_PORTFOLIO_ACCESS_TOKEN
-          );
-          
-          if (response.status === 200 && response.data.data?.portfolio) {
-            const data = response.data.data.portfolio;
-            setEmail(data.visibleFields.email===1?  data.user.email : null);
-            setAvatar(data.visibleFields.avatar===1? data.user.avatar : null);
-            setDesignation(data.visibleFields.designation===1? data.user.designation : null);
-            setLocation(data.visibleFields.location===1? data.user.location : null);
-            setFullName(data.visibleFields.fullName===1? data.user.fullName : null);
-            setBio(data.visibleFields.bio===1? data.user.bio : null);
-            setSkills(data.visibleFields.skills===1? data.user.skills : []);
-            setEducation(data.visibleFields.education===1? data.user.education : []);
-            setExperience(data.visibleFields.experience===1? data.user.experience : []);
-            setProjects(data.visibleFields.projects===1? data.user.projects : []);
-          }
-          else if(response.status === 401){
-          setIsUnauthorized(true);
-          
-          }
-           else {
-            setError(true);
-          }
-        } catch (err) {
-          setError(true);
-          console.error('Error fetching portfolio:', err);
-          setIsUnauthorized(true);
+
+  const [email, setEmail] = useState<string | null>(null)
+  const [avatar, setAvatar] = useState<string | null>(null)
+  const [designation, setDesignation] = useState<string | null>(null)
+  const [location, setLocation] = useState<string | null>(null)
+  const [fullName, setFullName] = useState<string | null>(null)
+  const [bio, setBio] = useState<string | null>(null)
+  const [skills, setSkills] = useState<string[]>([])
+  const [education, setEducation] = useState<any>([])
+  const [experience, setExperience] = useState<any>([])
+  const [projects, setProjects] = useState<any>([])
+  const [error, setError] = useState<boolean>(false)
+  const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false)
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const response = await Portfolio.getPublicPortfolio("default-portfolio-05", VITE_PORTFOLIO_ACCESS_TOKEN)
+
+        if (response.status === 200 && response.data.data?.portfolio) {
+          const data = response.data.data.portfolio
+          setEmail(data.visibleFields.email === 1 ? data.user.email : null)
+          setAvatar(data.visibleFields.avatar === 1 ? data.user.avatar : null)
+          setDesignation(data.visibleFields.designation === 1 ? data.user.designation : null)
+          setLocation(data.visibleFields.location === 1 ? data.user.location : null)
+          setFullName(data.visibleFields.fullName === 1 ? data.user.fullName : null)
+          setBio(data.visibleFields.bio === 1 ? data.user.bio : null)
+          setSkills(data.visibleFields.skills === 1 ? data.user.skills : [])
+          setEducation(data.visibleFields.education === 1 ? data.user.education : [])
+          setExperience(data.visibleFields.experience === 1 ? data.user.experience : [])
+          setProjects(data.visibleFields.projects === 1 ? data.user.projects : [])
+        } else if (response.status === 401) {
+          setIsUnauthorized(true)
+        } else {
+          setError(true)
         }
-      })();
-    }, []);
-  
-  
-    if(isUnauthorized){
-      return (<div className="flex h-screen items-center justify-center bg-gray-100">
+      } catch (err) {
+        setError(true)
+        console.error("Error fetching portfolio:", err)
+        setIsUnauthorized(true)
+      }
+    })()
+  }, [])
+
+  if (isUnauthorized) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-100">
         <div className="max-w-md rounded-2xl bg-white p-8 shadow-lg">
           <div className="flex flex-col items-center text-center">
             <Lock className="h-16 w-16 text-red-500" />
             <h1 className="mt-4 text-2xl font-bold text-gray-800">Access Denied</h1>
             <p className="mt-2 text-gray-600">
-              You don't have permission to view this page. Please contact your administrator if you believe this is a mistake.
+              You don't have permission to view this page. Please contact your administrator if you believe this is a
+              mistake.
             </p>
             <div className="mt-6 flex gap-4 ">
               <Button
                 className="rounded-xl bg-blue-500 px-6 py-3 text-white bg-neutral-950 hover:bg-neutral-800"
-                onClick={() => window.location.reload()} 
+                onClick={() => window.location.reload()}
               >
                 Retry
               </Button>
             </div>
           </div>
         </div>
-      </div>)
-    }
+      </div>
+    )
+  }
   const toggleDarkMode = () => {
     setDarkMode(!darkMode)
     document.documentElement.classList.toggle("dark")
@@ -95,7 +92,9 @@ export default function Home() {
   }
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-rose-50 to-cyan-50 dark:from-gray-950 dark:to-gray-900 transition-colors duration-500 ${darkMode ? "dark" : ""}`}>
+    <div
+      className={`min-h-screen bg-gradient-to-br from-rose-50 to-cyan-50 dark:from-gray-950 dark:to-gray-900 transition-colors duration-500 ${darkMode ? "dark" : ""}`}
+    >
       {/* Floating Background Shapes */}
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute w-96 h-96 bg-rose-200/30 dark:bg-rose-900/20 rounded-full blur-3xl -top-48 -left-48" />
@@ -112,10 +111,10 @@ export default function Home() {
           >
             <Terminal className="h-8 w-8 text-cyan-600 dark:text-cyan-400" />
             <span className="text-xl font-medium bg-gradient-to-r from-cyan-600 to-rose-600 bg-clip-text text-transparent dark:from-cyan-400 dark:to-rose-400">
-              johndoe.dev
+              {fullName ? `${fullName.split(" ")[0].toLowerCase()}.dev` : "johndoe.dev"}
             </span>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -130,46 +129,56 @@ export default function Home() {
         </header>
 
         {/* Hero Section */}
-        <motion.section 
-          className="flex flex-col lg:flex-row items-center gap-12 mb-28"
-          {...fadeIn}
-        >
+        <motion.section className="flex flex-col lg:flex-row items-center gap-12 mb-28" {...fadeIn}>
           <div className="relative lg:order-2">
             <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400 to-rose-400 rounded-3xl blur-xl opacity-30" />
             <Avatar className="w-64 h-64 border-4 border-white/50 dark:border-gray-900/50 backdrop-blur-sm shadow-2xl">
-              <AvatarImage src="/placeholder.svg" alt="John Doe" />
+              <AvatarImage src={avatar || "/placeholder.svg"} alt={fullName || "Profile"} />
               <AvatarFallback className="bg-gradient-to-r from-cyan-400 to-rose-400 text-white text-4xl font-medium">
-                JD
+                {fullName
+                  ? fullName
+                      .split(" ")
+                      .map((name) => name[0])
+                      .join("")
+                  : "JD"}
               </AvatarFallback>
             </Avatar>
           </div>
-          
+
           <div className="lg:order-1 space-y-6">
-            <motion.h1 
+            <motion.h1
               className="text-5xl md:text-6xl font-medium leading-tight"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
             >
-              Building Digital<br/>
+              {bio ? bio.split(" ").slice(0, 2).join(" ") : "Building Digital"}
+              <br />
               <span className="bg-gradient-to-r from-cyan-600 to-rose-600 bg-clip-text text-transparent dark:from-cyan-400 dark:to-rose-400">
-                Experiences
+                {bio ? bio.split(" ").slice(2, 4).join(" ") : "Experiences"}
               </span>
             </motion.h1>
-            
+
             <div className="flex space-x-6">
               <motion.a
                 whileHover={{ y: -2 }}
                 className="flex items-center space-x-2 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-sm"
+                href={email ? `mailto:${email}` : "#"}
               >
                 <Mail className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
                 <span>Get in touch</span>
               </motion.a>
-              
+
               <div className="flex space-x-4">
-                <motion.a whileHover={{ y: -2 }} className="p-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-full shadow-sm">
+                <motion.a
+                  whileHover={{ y: -2 }}
+                  className="p-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-full shadow-sm"
+                >
                   <Linkedin className="h-6 w-6 text-rose-600 dark:text-rose-400" />
                 </motion.a>
-                <motion.a whileHover={{ y: -2 }} className="p-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-full shadow-sm">
+                <motion.a
+                  whileHover={{ y: -2 }}
+                  className="p-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-full shadow-sm"
+                >
                   <Github className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
                 </motion.a>
               </div>
@@ -178,12 +187,12 @@ export default function Home() {
         </motion.section>
 
         {/* Skills Grid */}
-        <motion.section 
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-28"
-          {...fadeIn}
-        >
-          {['React', 'TypeScript', 'Node.js', 'GraphQL', 'AWS', 'Docker', 'Python', 'MongoDB'].map((skill, i) => (
-            <motion.div 
+        <motion.section className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-28" {...fadeIn}>
+          {(skills.length > 0
+            ? skills
+            : ["React", "TypeScript", "Node.js", "GraphQL", "AWS", "Docker", "Python", "MongoDB"]
+          ).map((skill, i) => (
+            <motion.div
               key={i}
               whileHover={{ scale: 1.05 }}
               className="p-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-3xl shadow-sm border border-white/30 dark:border-gray-900/30"
@@ -200,29 +209,28 @@ export default function Home() {
         <motion.section className="mb-28" {...fadeIn}>
           <div className="space-y-12">
             <h2 className="text-4xl font-medium mb-12">Professional Journey</h2>
-            
-            {[
-              {
-                title: "Lead Developer @ TechCorp",
-                period: "2020 - Present",
-                description: "Leading team in building scalable SaaS solutions",
-                tech: ["React", "Node.js", "AWS"]
-              },
-              {
-                title: "Senior Developer @ WebSolutions",
-                period: "2018 - 2020",
-                description: "Developed enterprise-grade web applications",
-                tech: ["Angular", "Python", "Docker"]
-              }
-            ].map((exp, i) => (
-              <motion.div 
-                key={i}
-                className="group relative pl-8"
-                whileHover={{ x: 10 }}
-              >
+
+            {(experience.length > 0
+              ? experience
+              : [
+                  {
+                    title: "Lead Developer @ TechCorp",
+                    period: "2020 - Present",
+                    description: "Leading team in building scalable SaaS solutions",
+                    tech: ["React", "Node.js", "AWS"],
+                  },
+                  {
+                    title: "Senior Developer @ WebSolutions",
+                    period: "2018 - 2020",
+                    description: "Developed enterprise-grade web applications",
+                    tech: ["Angular", "Python", "Docker"],
+                  },
+                ]
+            ).map((exp, i) => (
+              <motion.div key={i} className="group relative pl-8" whileHover={{ x: 10 }}>
                 <div className="absolute left-0 top-4 h-4 w-4 bg-cyan-400 rounded-full" />
                 <div className="absolute left-2 top-4 h-full w-1 bg-gradient-to-b from-cyan-400/30 to-rose-400/30" />
-                
+
                 <Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-white/30 dark:border-gray-900/30 rounded-2xl shadow-sm">
                   <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
@@ -231,8 +239,8 @@ export default function Home() {
                         <p className="text-gray-600 dark:text-gray-400 mb-4">{exp.period}</p>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {exp.tech.map((t, j) => (
-                          <Badge 
+                        {(exp.tech || []).map((t, j) => (
+                          <Badge
                             key={j}
                             className="bg-cyan-100/50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400"
                           >
@@ -252,32 +260,31 @@ export default function Home() {
         {/* Projects Showcase */}
         <motion.section className="mb-28" {...fadeIn}>
           <h2 className="text-4xl font-medium mb-12">Featured Work</h2>
-          
+
           <div className="grid md:grid-cols-2 gap-8">
-            {[
-              {
-                title: "E-commerce Platform",
-                description: "Scalable online shopping solution",
-                stack: ["React", "Node.js", "MongoDB"]
-              },
-              {
-                title: "AI Analytics Dashboard",
-                description: "Real-time business insights",
-                stack: ["Python", "TensorFlow", "AWS"]
-              }
-            ].map((project, i) => (
-              <motion.div 
-                key={i}
-                whileHover={{ y: -5 }}
-                className="relative overflow-hidden rounded-2xl shadow-sm"
-              >
+            {(projects.length > 0
+              ? projects
+              : [
+                  {
+                    title: "E-commerce Platform",
+                    description: "Scalable online shopping solution",
+                    stack: ["React", "Node.js", "MongoDB"],
+                  },
+                  {
+                    title: "AI Analytics Dashboard",
+                    description: "Real-time business insights",
+                    stack: ["Python", "TensorFlow", "AWS"],
+                  },
+                ]
+            ).map((project, i) => (
+              <motion.div key={i} whileHover={{ y: -5 }} className="relative overflow-hidden rounded-2xl shadow-sm">
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/20 to-rose-400/20" />
                 <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-8 border border-white/30 dark:border-gray-900/30">
                   <h3 className="text-xl font-medium mb-4">{project.title}</h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">{project.description}</p>
                   <div className="flex flex-wrap gap-2">
-                    {project.stack.map((tech, j) => (
-                      <Badge 
+                    {(project.stack || []).map((tech, j) => (
+                      <Badge
                         key={j}
                         variant="outline"
                         className="border-cyan-200 dark:border-cyan-900/30 text-cyan-600 dark:text-cyan-400"
@@ -295,3 +302,4 @@ export default function Home() {
     </div>
   )
 }
+
