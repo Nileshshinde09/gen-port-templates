@@ -1,16 +1,88 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { Briefcase, Mail, Code, GraduationCap, Rocket, Terminal } from "lucide-react"
+import { Briefcase, Mail, Code, GraduationCap, Rocket, Terminal, Lock } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Portfolio } from "@/services"
 
 export default function PortfolioPage() {
   const [darkMode, setDarkMode] = useState(false)
   const { scrollYProgress } = useScroll()
   const x = useTransform(scrollYProgress, [0, 1], [0, 100])
+  const [darkMode, setDarkMode] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const [designation, setDesignation] = useState<string | null>(null);
+  const [location, setLocation] = useState<string | null>(null);
+  const [fullName, setFullName] = useState<string | null>(null);
+  const [bio, setBio] = useState<string | null>(null);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [education, setEducation] = useState<Education[]>([]);
+  const [experience, setExperience] = useState<Experience[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [error, setError] = useState<boolean>(false);
+  const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await Portfolio.getPublicPortfolio(
+          "default-portfolio-01",
+          VITE_PORTFOLIO_ACCESS_TOKEN
+        );
+        
+        if (response.status === 200 && response.data.data?.portfolio) {
+          const data = response.data.data.portfolio;
+          setEmail(data.visibleFields.email===1?  data.user.email : null);
+          setAvatar(data.visibleFields.avatar===1? data.user.avatar : null);
+          setDesignation(data.visibleFields.designation===1? data.user.designation : null);
+          setLocation(data.visibleFields.location===1? data.user.location : null);
+          setFullName(data.visibleFields.fullName===1? data.user.fullName : null);
+          setBio(data.visibleFields.bio===1? data.user.bio : null);
+          setSkills(data.visibleFields.skills===1? data.user.skills : []);
+          setEducation(data.visibleFields.education===1? data.user.education : []);
+          setExperience(data.visibleFields.experience===1? data.user.experience : []);
+          setProjects(data.visibleFields.projects===1? data.user.projects : []);
+        }
+        else if(response.status === 401){
+        setIsUnauthorized(true);
+        
+        }
+         else {
+          setError(true);
+        }
+      } catch (err) {
+        setError(true);
+        console.error('Error fetching portfolio:', err);
+        setIsUnauthorized(true);
+      }
+    })();
+  }, []);
 
+
+  if(isUnauthorized){
+    return (<div className="flex h-screen items-center justify-center bg-gray-100">
+      <div className="max-w-md rounded-2xl bg-white p-8 shadow-lg">
+        <div className="flex flex-col items-center text-center">
+          <Lock className="h-16 w-16 text-red-500" />
+          <h1 className="mt-4 text-2xl font-bold text-gray-800">Access Denied</h1>
+          <p className="mt-2 text-gray-600">
+            You don't have permission to view this page. Please contact your administrator if you believe this is a mistake.
+          </p>
+          <div className="mt-6 flex gap-4 ">
+            <Button
+              className="rounded-xl bg-blue-500 px-6 py-3 text-white bg-neutral-950 hover:bg-neutral-800"
+              onClick={() => window.location.reload()} 
+            >
+              Retry
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>)
+  }
   const toggleDarkMode = () => {
     setDarkMode(!darkMode)
     document.documentElement.classList.toggle("dark")
