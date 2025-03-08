@@ -326,7 +326,6 @@
 //     </div>
 //   )
 // }
-"use client"
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
@@ -480,7 +479,7 @@ export default function Home() {
         <motion.section initial="hidden" animate="visible" variants={fadeIn} className="mb-16">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Experience</h2>
           <div className="space-y-8">
-            {experience.length > 0 ? (
+            {experience.length > 0 && (
               experience.map((exp, i) => (
                 <Card key={i} className="border border-gray-200 dark:border-gray-700">
                   <CardHeader className="flex flex-row items-center gap-4 pb-2">
@@ -501,42 +500,6 @@ export default function Home() {
                   </CardContent>
                 </Card>
               ))
-            ) : (
-              <>
-                <Card className="border border-gray-200 dark:border-gray-700">
-                  <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                    <Briefcase className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-                    <div>
-                      <CardTitle className="text-lg">Senior Developer</CardTitle>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Tech Corp • 2020 - Present</p>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="text-gray-600 dark:text-gray-300">
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li>Led team in developing enterprise applications</li>
-                      <li>Implemented modern web architecture</li>
-                      <li>Mentored junior developers</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-
-                <Card className="border border-gray-200 dark:border-gray-700">
-                  <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                    <Briefcase className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-                    <div>
-                      <CardTitle className="text-lg">Web Developer</CardTitle>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Digital Solutions • 2018 - 2020</p>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="text-gray-600 dark:text-gray-300">
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li>Developed client-facing web applications</li>
-                      <li>Optimized application performance</li>
-                      <li>Collaborated with design teams</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </>
             )}
           </div>
         </motion.section>
@@ -544,7 +507,7 @@ export default function Home() {
         {/* Education Section */}
         <motion.section initial="hidden" animate="visible" variants={fadeIn}>
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Education</h2>
-          {education.length > 0 ? (
+          {education.length > 0 && (
             education.map((edu, i) => (
               <Card key={i} className="border border-gray-200 dark:border-gray-700">
                 <CardHeader className="flex flex-row items-center gap-4 pb-2">
@@ -558,16 +521,6 @@ export default function Home() {
                 </CardHeader>
               </Card>
             ))
-          ) : (
-            <Card className="border border-gray-200 dark:border-gray-700">
-              <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                <GraduationCap className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-                <div>
-                  <CardTitle className="text-lg">Computer Science</CardTitle>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Stanford University • 2016 - 2020</p>
-                </div>
-              </CardHeader>
-            </Card>
           )}
         </motion.section>
       </div>
