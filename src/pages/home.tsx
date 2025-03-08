@@ -259,7 +259,7 @@ export default function PortfolioPage() {
     (async () => {
       try {
         const response = await Portfolio.getPublicPortfolio(
-          "default-portfolio-02",
+          "default-portfolio-03",
           VITE_PORTFOLIO_ACCESS_TOKEN
         );
 
@@ -372,7 +372,7 @@ export default function PortfolioPage() {
           >
             <Terminal className="h-6 w-6 text-blue-500 dark:text-blue-400" />
             <span className="text-lg font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              {fullName || "John Doe"}
+              {fullName || ""}
             </span>
           </motion.div>
           <motion.div whileHover={{ rotate: 15 }}>
@@ -419,10 +419,10 @@ export default function PortfolioPage() {
             </Avatar>
           </motion.div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            {fullName || "John Doe"}
+            {fullName || ""}
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
-            {designation || "Full Stack Developer"}
+            {designation || ""}
           </p>
           <motion.a
             whileHover={{
@@ -455,10 +455,7 @@ export default function PortfolioPage() {
             className="grid grid-cols-2 md:grid-cols-3 gap-4"
             variants={staggerChildren}
           >
-            {(skills.length > 0
-              ? skills
-              : ["React", "TypeScript", "Node.js", "Python", "AWS", "GraphQL"]
-            ).map((skill, i) => (
+            {skills.length > 0&& skills.map((skill, i) => (
               <motion.div
                 key={i}
                 variants={fadeIn}
