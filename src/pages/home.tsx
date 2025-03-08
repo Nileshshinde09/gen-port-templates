@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
