@@ -7,9 +7,9 @@ import { Switch } from "@/components/ui/switch"
 import { Briefcase, Mail, Code, GraduationCap, Rocket, Terminal, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Portfolio } from "@/services"
+import { VITE_PORTFOLIO_ACCESS_TOKEN } from "@/constants"
 
 export default function PortfolioPage() {
-  const [darkMode, setDarkMode] = useState(false)
   const { scrollYProgress } = useScroll()
   const x = useTransform(scrollYProgress, [0, 1], [0, 100])
   const [darkMode, setDarkMode] = useState(false);
@@ -20,16 +20,16 @@ export default function PortfolioPage() {
   const [fullName, setFullName] = useState<string | null>(null);
   const [bio, setBio] = useState<string | null>(null);
   const [skills, setSkills] = useState<string[]>([]);
-  const [education, setEducation] = useState<Education[]>([]);
-  const [experience, setExperience] = useState<Experience[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [education, setEducation] = useState<any>([]);
+  const [experience, setExperience] = useState<any>([]);
+  const [projects, setProjects] = useState<any>([]);
   const [error, setError] = useState<boolean>(false);
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
   useEffect(() => {
     (async () => {
       try {
         const response = await Portfolio.getPublicPortfolio(
-          "default-portfolio-01",
+          "default-portfolio-02",
           VITE_PORTFOLIO_ACCESS_TOKEN
         );
         
