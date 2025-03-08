@@ -355,10 +355,11 @@ export default function Home() {
   useEffect(() => {
     ;(async () => {
       try {
-        const response = await Portfolio.getPublicPortfolio("default-portfolio-03", VITE_PORTFOLIO_ACCESS_TOKEN)
+        const response = await Portfolio.getPublicPortfolio("default-portfolio-02", VITE_PORTFOLIO_ACCESS_TOKEN)
 
         if (response.status === 200 && response.data.data?.portfolio) {
           const data = response.data.data.portfolio
+          console.log(data)
           setEmail(data.visibleFields.email === 1 ? data.user.email : null)
           setAvatar(data.visibleFields.avatar === 1 ? data.user.avatar : null)
           setDesignation(data.visibleFields.designation === 1 ? data.user.designation : null)
@@ -487,7 +488,7 @@ export default function Home() {
                     <div>
                       <CardTitle className="text-lg">{exp.title}</CardTitle>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {exp.company} • {exp.startDate} - {exp.endDate || "Present"}
+                        {exp.company} • {exp.startDate?.split("T")[0]} - {exp.endDate?.split("T")[0] || "Present"}
                       </p>
                     </div>
                   </CardHeader>
@@ -505,7 +506,7 @@ export default function Home() {
         </motion.section>
 
         {/* Education Section */}
-        <motion.section initial="hidden" animate="visible" variants={fadeIn}>
+        <motion.section initial="hidden" animate="visible" variants={fadeIn} className="mb-16">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Education</h2>
           {education.length > 0 && (
             education.map((edu, i) => (
@@ -515,13 +516,68 @@ export default function Home() {
                   <div>
                     <CardTitle className="text-lg">{edu.degree}</CardTitle>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {edu.institution} • {edu.startDate} - {edu.endDate}
+                      {edu.institution} • {edu.startDate?.split("T")[0]} - {edu.endDate?.split("T")[0]}
                     </p>
                   </div>
                 </CardHeader>
               </Card>
             ))
           )}
+        </motion.section>
+
+        {/* Projects Section */}
+        <motion.section
+          initial="hidden"
+          animate="visible"
+          className="mb-16"
+        >
+          <motion.h2
+            className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-8 text-left"
+            variants={fadeIn}
+          >
+            Featured Projects
+          </motion.h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {projects.length > 0  && projects?.map((project, i) => (
+              <motion.div
+                key={i}
+                variants={fadeIn}
+                whileHover={{ y: -5 }}
+                className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700"
+              >
+                <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-2">
+                  {project.name}
+                </h3>
+                <p className="text-slate-600 dark:text-slate-300 mb-4">
+                  {project.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {project.technologies.map((tech, j) => (
+                    <span
+                      key={j}
+                      className="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-full text-sm"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-4">
+                  <a
+                    href={project.repositoryLink}
+                    className="text-slate-600 hover:text-slate-800 dark:text-slate-300 dark:hover:text-slate-100 transition-colors"
+                  >
+                    GitHub
+                  </a>
+                  <a
+                    href={project.liveDemoLink}
+                    className="text-slate-600 hover:text-slate-800 dark:text-slate-300 dark:hover:text-slate-100 transition-colors"
+                  >
+                    Live Demo
+                  </a>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </motion.section>
       </div>
     </div>
