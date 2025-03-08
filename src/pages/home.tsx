@@ -1,4 +1,4 @@
-
+"use client"
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
@@ -7,84 +7,92 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Briefcase, GraduationCap, Mail, MapPin, Moon, Phone, Sun, Code, Folder, ChevronRight, Lock } from "lucide-react"
+import {
+  Briefcase,
+  GraduationCap,
+  Mail,
+  MapPin,
+  Moon,
+  Phone,
+  Sun,
+  Code,
+  Folder,
+  ChevronRight,
+  Lock,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Portfolio } from "@/services"
 import { VITE_PORTFOLIO_ACCESS_TOKEN } from "@/constants"
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false)
-   
-  const [email, setEmail] = useState<string | null>(null);
-    const [avatar, setAvatar] = useState<string | null>(null);
-    const [designation, setDesignation] = useState<string | null>(null);
-    const [location, setLocation] = useState<string | null>(null);
-    const [fullName, setFullName] = useState<string | null>(null);
-    const [bio, setBio] = useState<string | null>(null);
-    const [skills, setSkills] = useState<string[]>([]);
-    const [education, setEducation] = useState<any>([]);
-    const [experience, setExperience] = useState<any>([]);
-    const [projects, setProjects] = useState<any>([]);
-    const [error, setError] = useState<boolean>(false);
-    const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
-    useEffect(() => {
-      (async () => {
-        try {
-          const response = await Portfolio.getPublicPortfolio(
-            "default-portfolio-07",
-            VITE_PORTFOLIO_ACCESS_TOKEN
-          );
-          
-          if (response.status === 200 && response.data.data?.portfolio) {
-            const data = response.data.data.portfolio;
-            setEmail(data.visibleFields.email===1?  data.user.email : null);
-            setAvatar(data.visibleFields.avatar===1? data.user.avatar : null);
-            setDesignation(data.visibleFields.designation===1? data.user.designation : null);
-            setLocation(data.visibleFields.location===1? data.user.location : null);
-            setFullName(data.visibleFields.fullName===1? data.user.fullName : null);
-            setBio(data.visibleFields.bio===1? data.user.bio : null);
-            setSkills(data.visibleFields.skills===1? data.user.skills : []);
-            setEducation(data.visibleFields.education===1? data.user.education : []);
-            setExperience(data.visibleFields.experience===1? data.user.experience : []);
-            setProjects(data.visibleFields.projects===1? data.user.projects : []);
-          }
-          else if(response.status === 401){
-          setIsUnauthorized(true);
-          
-          }
-           else {
-            setError(true);
-          }
-        } catch (err) {
-          setError(true);
-          console.error('Error fetching portfolio:', err);
-          setIsUnauthorized(true);
+
+  const [email, setEmail] = useState<string | null>(null)
+  const [avatar, setAvatar] = useState<string | null>(null)
+  const [designation, setDesignation] = useState<string | null>(null)
+  const [location, setLocation] = useState<string | null>(null)
+  const [fullName, setFullName] = useState<string | null>(null)
+  const [bio, setBio] = useState<string | null>(null)
+  const [skills, setSkills] = useState<string[]>([])
+  const [education, setEducation] = useState<any>([])
+  const [experience, setExperience] = useState<any>([])
+  const [projects, setProjects] = useState<any>([])
+  const [error, setError] = useState<boolean>(false)
+  const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false)
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const response = await Portfolio.getPublicPortfolio("default-portfolio-07", VITE_PORTFOLIO_ACCESS_TOKEN)
+
+        if (response.status === 200 && response.data.data?.portfolio) {
+          const data = response.data.data.portfolio
+          setEmail(data.visibleFields.email === 1 ? data.user.email : null)
+          setAvatar(data.visibleFields.avatar === 1 ? data.user.avatar : null)
+          setDesignation(data.visibleFields.designation === 1 ? data.user.designation : null)
+          setLocation(data.visibleFields.location === 1 ? data.user.location : null)
+          setFullName(data.visibleFields.fullName === 1 ? data.user.fullName : null)
+          setBio(data.visibleFields.bio === 1 ? data.user.bio : null)
+          setSkills(data.visibleFields.skills === 1 ? data.user.skills : [])
+          setEducation(data.visibleFields.education === 1 ? data.user.education : [])
+          setExperience(data.visibleFields.experience === 1 ? data.user.experience : [])
+          setProjects(data.visibleFields.projects === 1 ? data.user.projects : [])
+        } else if (response.status === 401) {
+          setIsUnauthorized(true)
+        } else {
+          setError(true)
         }
-      })();
-    }, []);
-  
-  
-    if(isUnauthorized){
-      return (<div className="flex h-screen items-center justify-center bg-gray-100">
+      } catch (err) {
+        setError(true)
+        console.error("Error fetching portfolio:", err)
+        setIsUnauthorized(true)
+      }
+    })()
+  }, [])
+
+  if (isUnauthorized) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-100">
         <div className="max-w-md rounded-2xl bg-white p-8 shadow-lg">
           <div className="flex flex-col items-center text-center">
             <Lock className="h-16 w-16 text-red-500" />
             <h1 className="mt-4 text-2xl font-bold text-gray-800">Access Denied</h1>
             <p className="mt-2 text-gray-600">
-              You don't have permission to view this page. Please contact your administrator if you believe this is a mistake.
+              You don't have permission to view this page. Please contact your administrator if you believe this is a
+              mistake.
             </p>
             <div className="mt-6 flex gap-4 ">
               <Button
                 className="rounded-xl bg-blue-500 px-6 py-3 text-white bg-neutral-950 hover:bg-neutral-800"
-                onClick={() => window.location.reload()} 
+                onClick={() => window.location.reload()}
               >
                 Retry
               </Button>
             </div>
           </div>
         </div>
-      </div>)
-    }
+      </div>
+    )
+  }
   const toggleDarkMode = () => {
     setDarkMode(!darkMode)
     document.documentElement.classList.toggle("dark")
@@ -108,19 +116,26 @@ export default function Home() {
 
         <motion.header className="text-center mb-12" {...fadeInUp}>
           <Avatar className="w-32 h-32 mx-auto mb-4 border-4 border-primary">
-            <AvatarImage src="/placeholder.svg" alt="John Doe" />
-            <AvatarFallback>JD</AvatarFallback>
+            <AvatarImage src={avatar || "/placeholder.svg"} alt={fullName || "Profile"} />
+            <AvatarFallback>
+              {fullName
+                ? fullName
+                    .split(" ")
+                    .map((name) => name[0])
+                    .join("")
+                : "JD"}
+            </AvatarFallback>
           </Avatar>
-          <h1 className="text-3xl font-medium mb-2">John Doe</h1>
-          <p className="text-lg text-muted-foreground mb-4">Full Stack Developer</p>
+          <h1 className="text-3xl font-medium mb-2">{fullName || "John Doe"}</h1>
+          <p className="text-lg text-muted-foreground mb-4">{designation || "Full Stack Developer"}</p>
           <div className="flex justify-center space-x-4 text-muted-foreground">
             <div className="flex items-center">
               <MapPin className="mr-2 h-4 w-4" />
-              <span>New York, NY</span>
+              <span>{location || "New York, NY"}</span>
             </div>
             <div className="flex items-center">
               <Mail className="mr-2 h-4 w-4" />
-              <span>john.doe@example.com</span>
+              <span>{email || "john.doe@example.com"}</span>
             </div>
             <div className="flex items-center">
               <Phone className="mr-2 h-4 w-4" />
@@ -138,13 +153,14 @@ export default function Home() {
             </CardHeader>
             <CardContent className="pt-6">
               <div className="flex flex-wrap gap-2">
-                {["JavaScript", "TypeScript", "React", "Node.js", "Python", "SQL", "Git", "AWS", "Docker"].map(
-                  (skill, index) => (
-                    <Badge key={index} variant="secondary" className="text-sm py-1 px-3">
-                      {skill}
-                    </Badge>
-                  ),
-                )}
+                {(skills.length > 0
+                  ? skills
+                  : ["JavaScript", "TypeScript", "React", "Node.js", "Python", "SQL", "Git", "AWS", "Docker"]
+                ).map((skill, index) => (
+                  <Badge key={index} variant="secondary" className="text-sm py-1 px-3">
+                    {skill}
+                  </Badge>
+                ))}
               </div>
             </CardContent>
           </Card>
@@ -159,28 +175,31 @@ export default function Home() {
             </CardHeader>
             <CardContent className="pt-6">
               <div className="space-y-6">
-                {[
-                  {
-                    title: "Senior Full Stack Developer",
-                    company: "TechCorp Inc.",
-                    period: "2020 - Present",
-                    responsibilities: [
-                      "Led the development of a high-traffic e-commerce platform",
-                      "Implemented microservices architecture to improve scalability",
-                      "Mentored junior developers and conducted code reviews",
-                    ],
-                  },
-                  {
-                    title: "Full Stack Developer",
-                    company: "WebSolutions Co.",
-                    period: "2018 - 2020",
-                    responsibilities: [
-                      "Developed and maintained multiple client websites",
-                      "Implemented responsive designs and improved site performance",
-                      "Collaborated with design team to create intuitive user interfaces",
-                    ],
-                  },
-                ].map((job, index) => (
+                {(experience.length > 0
+                  ? experience
+                  : [
+                      {
+                        title: "Senior Full Stack Developer",
+                        company: "TechCorp Inc.",
+                        period: "2020 - Present",
+                        responsibilities: [
+                          "Led the development of a high-traffic e-commerce platform",
+                          "Implemented microservices architecture to improve scalability",
+                          "Mentored junior developers and conducted code reviews",
+                        ],
+                      },
+                      {
+                        title: "Full Stack Developer",
+                        company: "WebSolutions Co.",
+                        period: "2018 - 2020",
+                        responsibilities: [
+                          "Developed and maintained multiple client websites",
+                          "Implemented responsive designs and improved site performance",
+                          "Collaborated with design team to create intuitive user interfaces",
+                        ],
+                      },
+                    ]
+                ).map((job, index) => (
                   <div key={index} className="relative pl-8 pb-8">
                     <div className="absolute left-0 top-0 h-full w-0.5 bg-primary"></div>
                     <div className="absolute left-0 -ml-[6.5px] top-0 w-4 h-4 rounded-full bg-primary"></div>
@@ -189,7 +208,7 @@ export default function Home() {
                       {job.company} | {job.period}
                     </p>
                     <ul className="mt-2 space-y-1">
-                      {job.responsibilities.map((resp, i) => (
+                      {(job.responsibilities || []).map((resp, i) => (
                         <li key={i} className="flex items-start">
                           <ChevronRight className="h-5 w-5 text-primary shrink-0 mr-2" />
                           <span>{resp}</span>
@@ -212,18 +231,21 @@ export default function Home() {
             </CardHeader>
             <CardContent className="pt-6">
               <div className="space-y-4">
-                {[
-                  {
-                    degree: "Master of Computer Science",
-                    school: "Stanford University",
-                    period: "2018-2020",
-                  },
-                  {
-                    degree: "Bachelor of Science in Computer Engineering",
-                    school: "MIT",
-                    period: "2014-2018",
-                  },
-                ].map((edu, index) => (
+                {(education.length > 0
+                  ? education
+                  : [
+                      {
+                        degree: "Master of Computer Science",
+                        school: "Stanford University",
+                        period: "2018-2020",
+                      },
+                      {
+                        degree: "Bachelor of Science in Computer Engineering",
+                        school: "MIT",
+                        period: "2014-2018",
+                      },
+                    ]
+                ).map((edu, index) => (
                   <div key={index} className="flex items-center">
                     <div className="w-2 h-2 rounded-full bg-primary mr-4"></div>
                     <div>
@@ -249,44 +271,77 @@ export default function Home() {
             <CardContent className="pt-6">
               <Tabs defaultValue="project1" className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="project1">E-commerce Platform</TabsTrigger>
-                  <TabsTrigger value="project2">AI Chatbot</TabsTrigger>
-                  <TabsTrigger value="project3">Fitness App</TabsTrigger>
+                  {(projects.length > 0
+                    ? projects
+                    : [
+                        {
+                          name: "E-commerce Platform",
+                          description: "Full-stack online shopping solution",
+                          details: [
+                            "Developed a scalable e-commerce platform using React, Node.js, and MongoDB.",
+                            "Key features: user authentication, product catalog, shopping cart, and payment integration.",
+                          ],
+                        },
+                        {
+                          name: "AI-powered Chatbot",
+                          description: "Intelligent conversational agent",
+                          details: [
+                            "Created a chatbot using natural language processing techniques and machine learning algorithms.",
+                            "Implemented intent recognition, entity extraction, and context management for human-like interactions.",
+                          ],
+                        },
+                        {
+                          name: "Mobile Fitness App",
+                          description: "Cross-platform health tracking solution",
+                          details: [
+                            "Built a cross-platform mobile app for fitness tracking using React Native and Firebase.",
+                            "Features include workout planning, progress tracking, and social sharing capabilities.",
+                          ],
+                        },
+                      ]
+                  ).map((project, index) => (
+                    <TabsTrigger key={index} value={`project${index + 1}`}>
+                      {project.name || project.title}
+                    </TabsTrigger>
+                  ))}
                 </TabsList>
-                {[
-                  {
-                    name: "E-commerce Platform",
-                    description: "Full-stack online shopping solution",
-                    details: [
-                      "Developed a scalable e-commerce platform using React, Node.js, and MongoDB.",
-                      "Key features: user authentication, product catalog, shopping cart, and payment integration.",
-                    ],
-                  },
-                  {
-                    name: "AI-powered Chatbot",
-                    description: "Intelligent conversational agent",
-                    details: [
-                      "Created a chatbot using natural language processing techniques and machine learning algorithms.",
-                      "Implemented intent recognition, entity extraction, and context management for human-like interactions.",
-                    ],
-                  },
-                  {
-                    name: "Mobile Fitness App",
-                    description: "Cross-platform health tracking solution",
-                    details: [
-                      "Built a cross-platform mobile app for fitness tracking using React Native and Firebase.",
-                      "Features include workout planning, progress tracking, and social sharing capabilities.",
-                    ],
-                  },
-                ].map((project, index) => (
+                {(projects.length > 0
+                  ? projects
+                  : [
+                      {
+                        name: "E-commerce Platform",
+                        description: "Full-stack online shopping solution",
+                        details: [
+                          "Developed a scalable e-commerce platform using React, Node.js, and MongoDB.",
+                          "Key features: user authentication, product catalog, shopping cart, and payment integration.",
+                        ],
+                      },
+                      {
+                        name: "AI-powered Chatbot",
+                        description: "Intelligent conversational agent",
+                        details: [
+                          "Created a chatbot using natural language processing techniques and machine learning algorithms.",
+                          "Implemented intent recognition, entity extraction, and context management for human-like interactions.",
+                        ],
+                      },
+                      {
+                        name: "Mobile Fitness App",
+                        description: "Cross-platform health tracking solution",
+                        details: [
+                          "Built a cross-platform mobile app for fitness tracking using React Native and Firebase.",
+                          "Features include workout planning, progress tracking, and social sharing capabilities.",
+                        ],
+                      },
+                    ]
+                ).map((project, index) => (
                   <TabsContent key={index} value={`project${index + 1}`}>
                     <Card>
                       <CardHeader>
-                        <CardTitle>{project.name}</CardTitle>
+                        <CardTitle>{project.name || project.title}</CardTitle>
                         <CardDescription>{project.description}</CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-2">
-                        {project.details.map((detail, i) => (
+                        {(project.details || []).map((detail, i) => (
                           <p key={i} className="flex items-start">
                             <ChevronRight className="h-5 w-5 text-primary shrink-0 mr-2" />
                             <span>{detail}</span>
@@ -304,3 +359,4 @@ export default function Home() {
     </div>
   )
 }
+
