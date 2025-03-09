@@ -29,8 +29,8 @@ export default function Home() {
   useEffect(() => {
     ;(async () => {
       try {
-        const response = await Portfolio.getPublicPortfolio("default-portfolio-02", VITE_PORTFOLIO_ACCESS_TOKEN)
-
+        const response = await Portfolio.getPublicPortfolio("default-portfolio-04", VITE_PORTFOLIO_ACCESS_TOKEN)
+        console.log(response)
         if (response.status === 200 && response.data.data?.portfolio) {
           const data = response.data.data.portfolio
           setEmail(data.visibleFields.email === 1 ? data.user.email : null)
