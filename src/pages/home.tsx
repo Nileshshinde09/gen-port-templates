@@ -115,7 +115,7 @@ export default function Home() {
                 <AvatarFallback className="bg-gradient-to-r from-blue-400 to-purple-500 text-white text-3xl font-medium">
                   {profileData?.fullName
                     ?.split(" ")
-                    .map((n) => n[0])
+                    .map((n:any ) => n[0])
                     .join("")}
                 </AvatarFallback>
               </Avatar>
@@ -171,7 +171,7 @@ export default function Home() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-6">
-                {profileData?.skills?.map((skill, index) => (
+                {profileData?.skills?.map((skill: any, index: number) => (
                   <motion.div whileHover={{ scale: 1.05 }} key={index}>
                     <Badge className="w-full h-24 flex flex-col items-center justify-center space-y-2 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-md rounded-xl border-0">
                       <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
@@ -198,7 +198,7 @@ export default function Home() {
               </CardHeader>
               <CardContent className="relative pt-8">
                 <div className="absolute left-8 top-0 h-full w-1 bg-gradient-to-b from-blue-400 to-purple-500 opacity-20 dark:opacity-30" />
-                {profileData?.experience?.map((job, index) => (
+                {profileData?.experience?.map((job: any, index: number) => (
                   <motion.div key={index} className="relative pl-16 pb-8 group" whileHover={{ x: 10 }}>
                     <div className="absolute left-8 top-2 w-4 h-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 shadow-md" />
                     <div className="p-6 bg-white dark:bg-gray-700 rounded-2xl shadow-md hover:shadow-lg transition-shadow">
@@ -228,7 +228,7 @@ export default function Home() {
               </CardHeader>
               <CardContent className="relative pt-8">
                 <div className="absolute left-8 top-0 h-full w-1 bg-gradient-to-b from-purple-400 to-blue-500 opacity-20 dark:opacity-30" />
-                {profileData?.education?.map((edu, index) => (
+                {profileData?.education?.map((edu: any, index: number) => (
                   <motion.div key={index} className="relative pl-16 pb-8 group" whileHover={{ x: 10 }}>
                     <div className="absolute left-8 top-2 w-4 h-4 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 shadow-md" />
                     <div className="p-6 bg-white dark:bg-gray-700 rounded-2xl shadow-md hover:shadow-lg transition-shadow">
@@ -263,7 +263,7 @@ export default function Home() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid md:grid-cols-2 gap-6 pt-6">
-                {profileData?.projects?.map((project, index) => (
+                {profileData?.projects?.map((project: any, index: number) => (
                   <motion.div
                     whileHover={{ y: -5 }}
                     key={index}
@@ -273,7 +273,7 @@ export default function Home() {
                       <h3 className="text-xl font-medium mb-2">{project.name}</h3>
                       <p className="text-gray-600 dark:text-gray-400 mb-4">{project.description}</p>
                       <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech, i) => (
+                        {project.technologies.map((tech: any, i: number) => (
                           <Badge
                             key={i}
                             variant="outline"
