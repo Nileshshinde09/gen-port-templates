@@ -1,59 +1,45 @@
+"use client"
+
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Briefcase,
-  GraduationCap,
-  Mail,
-  MapPin,
-  Moon,
-  Phone,
-  Sun,
-  Code,
-  Folder,
-  ChevronRight,
-  Lock,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Briefcase, Mail, MapPin, Moon, Sun, Code, Folder, Phone, Lock, GraduationCap } from "lucide-react"
 import { Portfolio } from "@/services"
 import { VITE_PORTFOLIO_ACCESS_TOKEN } from "@/constants"
+import { BoxIcon as Button } from "lucide-react"
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false)
-  const [email, setEmail] = useState<string | null>(null)
-  const [avatar, setAvatar] = useState<string | null>(null)
-  const [designation, setDesignation] = useState<string | null>(null)
-  const [location, setLocation] = useState<string | null>(null)
-  const [fullName, setFullName] = useState<string | null>(null)
-  const [bio, setBio] = useState<string | null>(null)
-  const [skills, setSkills] = useState<string[]>([])
-  const [education, setEducation] = useState<any>([])
-  const [experience, setExperience] = useState<any>([])
-  const [projects, setProjects] = useState<any>([])
   const [error, setError] = useState<boolean>(false)
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false)
+  const [profileData, setProfileData] = useState<any>(null)
+  const [visibleFields, setVisibleFields] = useState({
+    avatar: -1,
+    bio: -1,
+    designation: -1,
+    education: -1,
+    email: -1,
+    experience: -1,
+    fullName: -1,
+    location: -1,
+    projects: -1,
+    skills: -1,
+    username: -1,
+    phone: -1,
+  })
+
   useEffect(() => {
     ;(async () => {
       try {
-        const response = await Portfolio.getPublicPortfolio("default-portfolio-07", VITE_PORTFOLIO_ACCESS_TOKEN)
+        const response = await Portfolio.getPublicPortfolio("default-portfolio-02", VITE_PORTFOLIO_ACCESS_TOKEN)
 
         if (response.status === 200 && response.data.data?.portfolio) {
           const data = response.data.data.portfolio
-          console.log(data)
-          setEmail(data.visibleFields.email === 1 ? data.user.email : null)
-          setAvatar(data.visibleFields.avatar === 1 ? data.user.avatar : null)
-          setDesignation(data.visibleFields.designation === 1 ? data.user.designation : null)
-          setLocation(data.visibleFields.location === 1 ? data.user.location : null)
-          setFullName(data.visibleFields.fullName === 1 ? data.user.fullName : null)
-          setBio(data.visibleFields.bio === 1 ? data.user.bio : null)
-          setSkills(data.visibleFields.skills === 1 ? data.user.skills : [])
-          setEducation(data.visibleFields.education === 1 ? data.user.education : [])
-          setExperience(data.visibleFields.experience === 1 ? data.user.experience : [])
-          setProjects(data.visibleFields.projects === 1 ? data.user.projects : [])
+          setProfileData(data?.user)
+          setVisibleFields(data.visibleFields)
         } else if (response.status === 401) {
           setIsUnauthorized(true)
         } else {
@@ -66,6 +52,11 @@ export default function Home() {
       }
     })()
   }, [])
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode)
+    document.documentElement.classList.toggle("dark")
+  }
 
   if (isUnauthorized) {
     return (
@@ -91,10 +82,6 @@ export default function Home() {
       </div>
     )
   }
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode)
-    document.documentElement.classList.toggle("dark")
-  }
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
@@ -104,215 +91,206 @@ export default function Home() {
 
   return (
     <div
-      className={` min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-neutral-950 dark:to-neutral-950 transition-colors duration-300 ${darkMode ? "dark" : ""}`}
+      className={`min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300 ${
+        darkMode ? "dark" : ""
+      }`}
     >
       <div className="container mx-auto max-w-6xl px-4 py-8">
-        <motion.div className="flex justify-end mb-4" {...fadeInUp}>
-          <Switch checked={darkMode} onCheckedChange={toggleDarkMode} className="mr-2" />
-          {darkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+        {/* Dark Mode Toggle */}
+        <motion.div className="flex justify-end mb-8" {...fadeInUp}>
+          <div className="flex items-center space-x-2 bg-white dark:bg-gray-800 p-2 rounded-full shadow-lg">
+            <Sun className="h-5 w-5 text-yellow-500" />
+            <Switch checked={darkMode} onCheckedChange={toggleDarkMode} className="data-[state=checked]:bg-blue-500" />
+            <Moon className="h-5 w-5 text-blue-400" />
+          </div>
         </motion.div>
 
-        <motion.header className="text-center mb-12" {...fadeInUp}>
-          <Avatar className="w-32 h-32 mx-auto mb-4 border-4 border-primary">
-            <AvatarImage src={avatar || "/placeholder.svg"} alt={fullName || "Profile"} />
-            <AvatarFallback>
-              {fullName
-                ? fullName
-                    .split(" ")
-                    .map((name) => name[0])
-                    .join("")
-                : "JD"}
-            </AvatarFallback>
-          </Avatar>
-          <h1 className="text-3xl font-medium mb-2">{fullName || "John Doe"}</h1>
-          <p className="text-lg text-muted-foreground mb-4">{designation || "Full Stack Developer"}</p>
-          <div className="flex justify-center space-x-4 text-muted-foreground">
-            <div className="flex items-center">
-              <MapPin className="mr-2 h-4 w-4" />
-              <span>{location || "New York, NY"}</span>
+        {/* Hero Section */}
+        <motion.header className="text-center mb-16" {...fadeInUp}>
+          {visibleFields.avatar !== 0 && (
+            <div className="relative inline-block">
+              <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full blur opacity-30 dark:opacity-50" />
+              <Avatar className="w-40 h-40 mx-auto border-4 border-white dark:border-gray-800 shadow-2xl relative">
+                <AvatarImage src={profileData?.avatar || "/placeholder.svg"} alt={profileData?.fullName} />
+                <AvatarFallback className="bg-gradient-to-r from-blue-400 to-purple-500 text-white text-3xl font-medium">
+                  {profileData?.fullName
+                    ?.split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </AvatarFallback>
+              </Avatar>
             </div>
-            <div className="flex items-center">
-              <Mail className="mr-2 h-4 w-4" />
-              <span>{email || "john.doe@example.com"}</span>
-            </div>
-            <div className="flex items-center">
-              <Phone className="mr-2 h-4 w-4" />
-              <span>+1 (555) 123-4567</span>
-            </div>
+          )}
+          {visibleFields.fullName !== 0 && (
+            <h1 className="text-5xl font-medium mb-4 mt-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400">
+              {profileData?.fullName}
+            </h1>
+          )}
+          {visibleFields.designation !== 0 && (
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-6 font-medium">{profileData?.designation}</p>
+          )}
+          <div className="flex justify-center space-x-6 flex-wrap gap-4">
+            {visibleFields.location !== 0 && (
+              <motion.a
+                whileHover={{ y: -2 }}
+                className="flex items-center px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-md hover:shadow-lg transition-shadow"
+              >
+                <MapPin className="mr-2 h-5 w-5 text-blue-500" />
+                <span className="text-gray-700 dark:text-gray-300">{profileData?.location}</span>
+              </motion.a>
+            )}
+            {visibleFields.email !== 0 && (
+              <motion.a
+                whileHover={{ y: -2 }}
+                className="flex items-center px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-md hover:shadow-lg transition-shadow"
+              >
+                <Mail className="mr-2 h-5 w-5 text-purple-500" />
+                <span className="text-gray-700 dark:text-gray-300">{profileData?.email}</span>
+              </motion.a>
+            )}
+            {visibleFields.phone !== 0 && profileData?.phone && (
+              <motion.a
+                whileHover={{ y: -2 }}
+                className="flex items-center px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-md hover:shadow-lg transition-shadow"
+              >
+                <Phone className="mr-2 h-5 w-5 text-green-500" />
+                <span className="text-gray-700 dark:text-gray-300">{profileData?.phone}</span>
+              </motion.a>
+            )}
           </div>
         </motion.header>
 
-        <motion.section className="mb-12" {...fadeInUp}>
-          <Card className="overflow-hidden">
-            <CardHeader className="bg-primary text-primary-foreground">
-              <CardTitle className="text-xl font-medium flex items-center">
-                <Code className="mr-2 h-6 w-6" /> Skills
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="flex flex-wrap gap-2">
-                {(skills.length > 0
-                  ? skills
-                  : ["JavaScript", "TypeScript", "React", "Node.js", "Python", "SQL", "Git", "AWS", "Docker"]
-                ).map((skill, index) => (
-                  <Badge key={index} variant="secondary" className="text-sm py-1 px-3">
-                    {skill}
-                  </Badge>
+        {/* Skills Grid */}
+        {visibleFields.skills !== 0 && (
+          <motion.section className="mb-16" {...fadeInUp}>
+            <Card className="border-0 shadow-xl dark:bg-gray-800">
+              <CardHeader className="pb-0">
+                <CardTitle className="text-3xl font-medium flex items-center space-x-3">
+                  <Code className="h-8 w-8 text-blue-500" />
+                  <span>Technical Expertise</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-6">
+                {profileData?.skills?.map((skill, index) => (
+                  <motion.div whileHover={{ scale: 1.05 }} key={index}>
+                    <Badge className="w-full h-24 flex flex-col items-center justify-center space-y-2 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors shadow-md rounded-xl border-0">
+                      <div className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                        <Code className="h-5 w-5 text-blue-500" />
+                      </div>
+                      <span className="text-lg font-medium text-gray-700 dark:text-gray-300">{skill}</span>
+                    </Badge>
+                  </motion.div>
                 ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.section>
+              </CardContent>
+            </Card>
+          </motion.section>
+        )}
 
-        <motion.section className="mb-12" {...fadeInUp}>
-          <Card className="overflow-hidden">
-            <CardHeader className="bg-primary text-primary-foreground">
-              <CardTitle className="text-xl font-medium flex items-center">
-                <Briefcase className="mr-2 h-6 w-6" /> Experience
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-6">
-                {(experience.length > 0
-                  ? experience
-                  : [
-                      {
-                        title: "Senior Full Stack Developer",
-                        company: "TechCorp Inc.",
-                        period: "2020 - Present",
-                        responsibilities: [
-                          "Led the development of a high-traffic e-commerce platform",
-                          "Implemented microservices architecture to improve scalability",
-                          "Mentored junior developers and conducted code reviews",
-                        ],
-                      },
-                      {
-                        title: "Full Stack Developer",
-                        company: "WebSolutions Co.",
-                        period: "2018 - 2020",
-                        responsibilities: [
-                          "Developed and maintained multiple client websites",
-                          "Implemented responsive designs and improved site performance",
-                          "Collaborated with design team to create intuitive user interfaces",
-                        ],
-                      },
-                    ]
-                ).map((job, index) => (
-                  <div key={index} className="relative pl-8 pb-8">
-                    <div className="absolute left-0 top-0 h-full w-0.5 bg-primary"></div>
-                    <div className="absolute left-0 -ml-[6.5px] top-0 w-4 h-4 rounded-full bg-primary"></div>
-                    <h3 className="text-lg font-serif">{job.title}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {job.company} | {job.period}
-                    </p>
-                    <ul className="mt-2 space-y-1">
-                      {(job.responsibilities || []).map((resp, i) => (
-                        <li key={i} className="flex items-start">
-                          <ChevronRight className="h-5 w-5 text-primary shrink-0 mr-2" />
-                          <span>{resp}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.section>
-
-        <motion.section className="mb-12" {...fadeInUp}>
-          <Card className="overflow-hidden">
-            <CardHeader className="bg-primary text-primary-foreground">
-              <CardTitle className="text-xl font-medium flex items-center">
-                <GraduationCap className="mr-2 h-6 w-6" /> Education
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                {education.length > 0 && education
-                  .map((edu, index) => (
-                  <div key={index} className="flex items-center">
-                    <div className="w-2 h-2 rounded-full bg-primary mr-4"></div>
-                    <div>
-                      <h3 className="font-serif text-lg">{edu.degree}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {edu.school}, {edu.period}
+        {/* Experience Timeline */}
+        {visibleFields.experience !== 0 && (
+          <motion.section className="mb-16" {...fadeInUp}>
+            <Card className="border-0 shadow-xl dark:bg-gray-800">
+              <CardHeader>
+                <CardTitle className="text-3xl font-medium flex items-center space-x-3">
+                  <Briefcase className="h-8 w-8 text-purple-500" />
+                  <span>Professional Journey</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative pt-8">
+                <div className="absolute left-8 top-0 h-full w-1 bg-gradient-to-b from-blue-400 to-purple-500 opacity-20 dark:opacity-30" />
+                {profileData?.experience?.map((job, index) => (
+                  <motion.div key={index} className="relative pl-16 pb-8 group" whileHover={{ x: 10 }}>
+                    <div className="absolute left-8 top-2 w-4 h-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 shadow-md" />
+                    <div className="p-6 bg-white dark:bg-gray-700 rounded-2xl shadow-md hover:shadow-lg transition-shadow">
+                      <h3 className="text-xl font-medium mb-2">{job.position}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                        {job.company} • {new Date(job.startDate).getFullYear()} -{" "}
+                        {job.currentlyWorking ? "Present" : new Date(job.endDate).getFullYear()}
                       </p>
+                      <div className="text-gray-600 dark:text-gray-300">{job.description}</div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.section>
+              </CardContent>
+            </Card>
+          </motion.section>
+        )}
 
-        <motion.section {...fadeInUp}>
-          <Card className="overflow-hidden">
-            <CardHeader className="bg-primary text-primary-foreground">
-              <CardTitle className="text-xl font-medium flex items-center">
-                <Folder className="mr-2 h-6 w-6" /> Projects
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <Tabs defaultValue="project1" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  {projects.length > 0
-                    && projects.map((project, index) => (
-                    <TabsTrigger key={index} value={`project${index + 1}`}>
-                      {project.name || project.title}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-                {(projects.length > 0
-                  ? projects
-                  : [
-                      {
-                        name: "E-commerce Platform",
-                        description: "Full-stack online shopping solution",
-                        details: [
-                          "Developed a scalable e-commerce platform using React, Node.js, and MongoDB.",
-                          "Key features: user authentication, product catalog, shopping cart, and payment integration.",
-                        ],
-                      },
-                      {
-                        name: "AI-powered Chatbot",
-                        description: "Intelligent conversational agent",
-                        details: [
-                          "Created a chatbot using natural language processing techniques and machine learning algorithms.",
-                          "Implemented intent recognition, entity extraction, and context management for human-like interactions.",
-                        ],
-                      },
-                      {
-                        name: "Mobile Fitness App",
-                        description: "Cross-platform health tracking solution",
-                        details: [
-                          "Built a cross-platform mobile app for fitness tracking using React Native and Firebase.",
-                          "Features include workout planning, progress tracking, and social sharing capabilities.",
-                        ],
-                      },
-                    ]
-                ).map((project, index) => (
-                  <TabsContent key={index} value={`project${index + 1}`}>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>{project.name || project.title}</CardTitle>
-                        <CardDescription>{project.description}</CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-2">
-                        {(project.details || []).map((detail, i) => (
-                          <p key={i} className="flex items-start">
-                            <ChevronRight className="h-5 w-5 text-primary shrink-0 mr-2" />
-                            <span>{detail}</span>
-                          </p>
-                        ))}
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
+        {/* Education Section */}
+        {visibleFields.education !== 0 && (
+          <motion.section className="mb-16" {...fadeInUp}>
+            <Card className="border-0 shadow-xl dark:bg-gray-800">
+              <CardHeader>
+                <CardTitle className="text-3xl font-medium flex items-center space-x-3">
+                  <GraduationCap className="h-8 w-8 text-blue-500" />
+                  <span>Educational Background</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative pt-8">
+                <div className="absolute left-8 top-0 h-full w-1 bg-gradient-to-b from-purple-400 to-blue-500 opacity-20 dark:opacity-30" />
+                {profileData?.education?.map((edu, index) => (
+                  <motion.div key={index} className="relative pl-16 pb-8 group" whileHover={{ x: 10 }}>
+                    <div className="absolute left-8 top-2 w-4 h-4 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 shadow-md" />
+                    <div className="p-6 bg-white dark:bg-gray-700 rounded-2xl shadow-md hover:shadow-lg transition-shadow">
+                      <h3 className="text-xl font-medium mb-2">
+                        {edu.degree} in {edu.fieldOfStudy}
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                        {edu.institution} • {new Date(edu.startDate).getFullYear()} -{" "}
+                        {edu.currentlyStudying ? "Present" : new Date(edu.endDate).getFullYear()}
+                      </p>
+                      {edu.currentlyStudying && (
+                        <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                          Currently Studying
+                        </Badge>
+                      )}
+                    </div>
+                  </motion.div>
                 ))}
-              </Tabs>
-            </CardContent>
-          </Card>
-        </motion.section>
+              </CardContent>
+            </Card>
+          </motion.section>
+        )}
+
+        {/* Projects Showcase */}
+        {visibleFields.projects !== 0 && (
+          <motion.section {...fadeInUp}>
+            <Card className="border-0 shadow-xl dark:bg-gray-800">
+              <CardHeader>
+                <CardTitle className="text-3xl font-medium flex items-center space-x-3">
+                  <Folder className="h-8 w-8 text-blue-500" />
+                  <span>Featured Projects</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid md:grid-cols-2 gap-6 pt-6">
+                {profileData?.projects?.map((project, index) => (
+                  <motion.div
+                    whileHover={{ y: -5 }}
+                    key={index}
+                    className="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden"
+                  >
+                    <div className="p-6">
+                      <h3 className="text-xl font-medium mb-2">{project.name}</h3>
+                      <p className="text-gray-600 dark:text-gray-400 mb-4">{project.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {project.technologies.map((tech, i) => (
+                          <Badge
+                            key={i}
+                            variant="outline"
+                            className="text-blue-500 dark:text-blue-400 border-blue-200 dark:border-blue-900"
+                          >
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-r from-blue-400 to-purple-500 h-2 w-full" />
+                  </motion.div>
+                ))}
+              </CardContent>
+            </Card>
+          </motion.section>
+        )}
       </div>
     </div>
   )
