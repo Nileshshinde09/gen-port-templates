@@ -12,7 +12,6 @@ import {
   GraduationCap,
   Rocket,
   Terminal,
-  Phone,
   Lock,
 } from "lucide-react";
 import { Portfolio } from "@/services";
